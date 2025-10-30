@@ -8,8 +8,8 @@ import threading    # To create the 'worker' thread
 WINDOW_TITLE = "Pixel Pomodoro"
 WINDOW_WIDTH = 300
 WINDOW_HEIGHT = 350
-BG_COLOR = "#2b2b2b" # A nice dark grey
-FG_COLOR = "#f0f0f0" 
+BG_COLOR = "#C6534B" # Red Pomodoro color
+FG_COLOR = "#FFFFFF" 
 FONT_NAME = "Press Start 2P" # Got it from google
 
 # ---Timer Constants---
@@ -26,6 +26,37 @@ class PomodoroApp(tk.Tk):
         self.title(WINDOW_TITLE)
         self.geometry(f"{WINDOW_WIDTH}x{WINDOW_HEIGHT}")
         self.config(bg=BG_COLOR)
+
+        # --- Load the Tomato Image ---
+        image_path = os.path.join("assets","pomodoro.png")
+
+        try:
+            # Opening the image with Pillow
+            img = Image.open(image_path)
+
+            # Resize to fit nicely as a Icon
+            img = img.resize((32,32), Image.LANCZOS)
+
+            # Must be saved to 'self' to prevent it from being garbage-collected (disappearing).
+            self.tomato_image = ImageTk.PhotoImage(img)
+            
+            # App Icon
+            self.iconphoto(True, self.tomato_image)
+
+        except Exception as e:
+            # Error Loading the Image
+            print(f"Error occured Loading Image: {e}")
+        
+        # --- Timer Label ---
+        self.timer_label = tk.Label(
+            self,
+            text = f"{WORK_MIN:02}:00",
+            font=(FONT_NAME, 40, "bold"),
+            fg = FG_COLOR,
+            bg = BG_COLOR
+        )
+        self.timer_label.pack(pady=50)
+
 
 
 
