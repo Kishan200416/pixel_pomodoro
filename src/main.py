@@ -10,6 +10,7 @@ WINDOW_WIDTH = 300
 WINDOW_HEIGHT = 350
 BG_COLOR = "#C6534B" # Red Pomodoro color
 FG_COLOR = "#FFFFFF" 
+BUTTON_COLOR = "#DAA520"
 FONT_NAME = "Press Start 2P" # Got it from google
 
 # ---Timer Constants---
@@ -56,6 +57,33 @@ class PomodoroApp(tk.Tk):
             bg = BG_COLOR
         )
         self.timer_label.pack(pady=50)
+
+        # --- Button Frame ---
+        self.button_frame = tk.Frame(self, bg=BG_COLOR)
+        self.button_frame.pack(pady=20)
+
+        # ---Start Button ---
+        self.start_button = tk.Button(
+            self.button_frame,
+            text='Start',
+            font=(FONT_NAME, 14, "bold"),
+            bg= BUTTON_COLOR,
+            fg=FG_COLOR,
+            command=None # Fill later
+        )
+        self.start_button.pack(side=tk.LEFT, padx=10)
+
+        # --- Reset Button ---
+
+        self.reset_button = tk.Button(
+            self.button_frame,
+            text = 'Reset',
+            font = (FONT_NAME, 14, "bold"),
+            bg = BUTTON_COLOR,
+            fg = FG_COLOR,
+            command=None # Fill later
+        )
+        self.reset_button.pack(side=tk.LEFT, padx=10)
 
 
 
