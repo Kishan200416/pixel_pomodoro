@@ -8,3 +8,5 @@ __pycache__/
 
 # Sensitive information
 .env
+
+src/tempCodeRunnerFile.py

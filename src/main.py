@@ -4,6 +4,19 @@ import os
 import time # For time.sleep()
 import threading    # To create the 'worker' thread
 import pygame # for sound
+import sys #To make it into app
+
+# --- Helper Function for PyInstaller ---
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        # _MEIPASS is not set, so we're running in development
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 # --- Constant ---
 WINDOW_TITLE = "Pixel Pomodoro"
@@ -15,9 +28,9 @@ BUTTON_COLOR = "#DAA520"
 FONT_NAME = "Press Start 2P" # Got it from google
 
 # ---Timer Constants---
-WORK_MIN = 0.1
-SHORT_BREAK_MIN = 0.2
-LONG_BREAK_MIN = 0.5
+WORK_MIN = 25
+SHORT_BREAK_MIN = 5
+LONG_BREAK_MIN = 30
 
 # --- Main Application Class ---
 class PomodoroApp(tk.Tk):
@@ -31,7 +44,7 @@ class PomodoroApp(tk.Tk):
 
         # --- Initialize Audio ---
         pygame.mixer.init()
-        sound_path = os.path.join("assets", "clavar_la_espada.mp3")
+        sound_path = resource_path(os.path.join("assets", "clavar_la_espada.mp3"))
         self.notification_sound = pygame.mixer.Sound(sound_path)
 
         # --- Timer Variables ---
@@ -42,7 +55,7 @@ class PomodoroApp(tk.Tk):
         self.current_state = "Work"
 
         # --- Load the Tomato Image ---
-        image_path = os.path.join("assets","pomodoro.png")
+        image_path = resource_path(os.path.join("assets","pomodoro.png"))
 
 
         try:
@@ -216,9 +229,9 @@ class PomodoroApp(tk.Tk):
         self.timer_label.config(text=f"{mins:02}:{secs:02}")
 
     def reset_timer(self):
-        pygame.mixer.stop() # Stop the music
         """Resets the timer to a default 25-min Work session."""
-
+        pygame.mixer.stop() # Stop the music
+        
         #Fire the worker thread by setting False
         self.timer_running = False
 
