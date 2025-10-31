@@ -3,6 +3,7 @@ from PIL import Image, ImageTk # This will allow Pillow to load PNGs
 import os
 import time # For time.sleep()
 import threading    # To create the 'worker' thread
+import pygame # for sound
 
 # --- Constant ---
 WINDOW_TITLE = "Pixel Pomodoro"
@@ -15,8 +16,8 @@ FONT_NAME = "Press Start 2P" # Got it from google
 
 # ---Timer Constants---
 WORK_MIN = 0.1
-SHORT_BREAK_MIN = 0.05
-LONG_BREAK_MIN = 0.2
+SHORT_BREAK_MIN = 0.2
+LONG_BREAK_MIN = 0.5
 
 # --- Main Application Class ---
 class PomodoroApp(tk.Tk):
@@ -28,6 +29,11 @@ class PomodoroApp(tk.Tk):
         self.geometry(f"{WINDOW_WIDTH}x{WINDOW_HEIGHT}")
         self.config(bg=BG_COLOR)
 
+        # --- Initialize Audio ---
+        pygame.mixer.init()
+        sound_path = os.path.join("assets", "clavar_la_espada.mp3")
+        self.notification_sound = pygame.mixer.Sound(sound_path)
+
         # --- Timer Variables ---
         self.current_seconds = WORK_MIN * 60
         self.timer_running = False
@@ -37,6 +43,7 @@ class PomodoroApp(tk.Tk):
 
         # --- Load the Tomato Image ---
         image_path = os.path.join("assets","pomodoro.png")
+
 
         try:
             # Opening the image with Pillow
@@ -136,6 +143,7 @@ class PomodoroApp(tk.Tk):
         self.reset_button.pack(side=tk.LEFT, padx=10)
 
     def start_timer_thread(self):
+        pygame.mixer.stop() # Stop the music
         # Dont Start Timer if One Already On
         if self.timer_running:
             return
@@ -178,6 +186,8 @@ class PomodoroApp(tk.Tk):
     def setup_next_session(self):
         """Sets the app for the next session (Work,Short, or Long)"""
 
+        self.notification_sound.play()
+
         # If the session finished was "Work" session
         if self.current_state == "Work":
             self.sessions_completed += 1
@@ -206,6 +216,7 @@ class PomodoroApp(tk.Tk):
         self.timer_label.config(text=f"{mins:02}:{secs:02}")
 
     def reset_timer(self):
+        pygame.mixer.stop() # Stop the music
         """Resets the timer to a default 25-min Work session."""
 
         #Fire the worker thread by setting False
